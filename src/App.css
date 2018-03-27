@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+}
+
+span a {
+  overflow: hidden;
+}
+
+img {
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 30px;
+}
