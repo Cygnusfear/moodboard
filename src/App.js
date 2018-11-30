@@ -24,7 +24,8 @@ class App extends Component {
     super(props);
     this.state = {
       images: images,
-      dragging: false
+      dragging: false,
+      selected: null
     };
     this.dropArea = React.createRef();
   }
@@ -40,6 +41,7 @@ class App extends Component {
 
     this.dropArea.current.addEventListener("drop", this.fileDrop, false);
     this.dropArea.current.addEventListener("dragleave", this.leaveDrag, false);
+    window.addEventListener("keydown", this.keyPress);
   }
 
   fileDrag = e => {
@@ -72,22 +74,21 @@ class App extends Component {
     });
   };
 
-  uploadFile = file => {
-    let url = "YOUR URL HERE";
-    let formData = new FormData();
+  hoverOn = e => {
+    this.setState({ selected: e });
+  };
 
-    formData.append("file", file);
+  hoverOff = e => {
+    if (this.state.selected === e) this.setState({ selected: null });
+  };
 
-    fetch(url, {
-      method: "POST",
-      body: formData
-    })
-      .then(() => {
-        /* Done. Inform the user */
-      })
-      .catch(() => {
-        /* Error. Inform the user */
-      });
+  keyPress = e => {
+    if (this.state.selected && e.code === "Backspace") {
+      console.log(e);
+      let images = [...this.state.images];
+      images.splice(images.indexOf(this.state.selected), 1);
+      this.setState({ images: images, selected: null });
+    }
   };
 
   render() {
@@ -116,6 +117,8 @@ class App extends Component {
                 style={{
                   pointerEvents: dragging ? "none" : "auto"
                 }}
+                onMouseEnter={() => this.hoverOn(item)}
+                onMouseLeave={() => this.hoverOff(item)}
               >
                 <ImageZoom
                   image={{ src: item, className: "img", title: item }}

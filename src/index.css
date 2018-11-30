@@ -13,3 +13,18 @@ body {
   left: 0px;
   z-index: 999;
 }
+
+.App,
+.Gallery {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+img {
+  border: 2px solid white;
+}
+
+img:hover {
+  border: 2px #eee solid;
+  border-radius: 10px;
+}
