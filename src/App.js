@@ -14,8 +14,8 @@ function importAll(r) {
 }
 
 const gutter = 30;
-const images = shuffleArray(
-  importAll(require.context("./Images/", false, /\.(png|jpe?g|svg)$/))
+const images = importAll(
+  require.context("./Images/", false, /\.(png|jpe?g|svg)$/)
 );
 
 class App extends Component {
@@ -55,7 +55,8 @@ class App extends Component {
                 <ImageZoom
                   image={{
                     src: item,
-                    className: "img"
+                    className: "img",
+                    title: item
                   }}
                   zoomImage={{
                     alt: "Golden Gate Bridge",
