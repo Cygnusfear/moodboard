@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import StackGrid from "react-stack-grid";
+import ImageZoom from "react-medium-image-zoom";
 
 const shuffleArray = arr =>
   arr
@@ -51,9 +52,16 @@ class App extends Component {
           >
             {this.state.images.map((item, i) => (
               <div key={i}>
-                <a href={item}>
-                  <img src={item} />
-                </a>
+                <ImageZoom
+                  image={{
+                    src: item,
+                    className: "img"
+                  }}
+                  zoomImage={{
+                    alt: "Golden Gate Bridge",
+                    src: item
+                  }}
+                />
               </div>
             ))}
           </StackGrid>
