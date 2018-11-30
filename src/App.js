@@ -15,9 +15,10 @@ function importAll(r) {
 }
 
 const gutter = 30;
-const images = importAll(
-  require.context("./Images/", false, /\.(png|jpe?g|svg)$/)
-);
+const images = [];
+// importAll(
+//   require.context("./Images/", false, /\.(png|jpe?g|svg)$/)
+// );
 
 class App extends Component {
   constructor(props) {
@@ -54,9 +55,6 @@ class App extends Component {
   leaveDrag = e => {
     e.preventDefault();
     e.stopPropagation();
-    // this.setState({ dragging: false });
-    if (e.dataTransfer.files.length > 0)
-      console.log("drop", e.dataTransfer.files);
   };
 
   fileDrop = e => {
@@ -84,7 +82,6 @@ class App extends Component {
 
   keyPress = e => {
     if (this.state.selected && e.code === "Backspace") {
-      console.log(e);
       let images = [...this.state.images];
       images.splice(images.indexOf(this.state.selected), 1);
       this.setState({ images: images, selected: null });
@@ -92,16 +89,16 @@ class App extends Component {
   };
 
   render() {
-    const { dragging } = this.state;
+    const { dragging, images } = this.state;
     return (
       <div className="App">
         <div
           className="Gallery"
           ref={this.dropArea}
-          style={{
-            opacity: dragging ? 0.1 : 1
-          }}
+          style={{ opacity: dragging ? 0.1 : 1 }}
         >
+          {images.length === 0 &&
+            "Drop images here, make moodboard, wow much! ❤️"}
           <StackGrid
             gridRef={grid => (this.grid = grid)}
             columnWidth={"30%"}
@@ -111,7 +108,7 @@ class App extends Component {
             appearDelay={30}
             monitorImagesLoaded={true}
           >
-            {this.state.images.map((item, i) => (
+            {images.map((item, i) => (
               <div
                 key={i}
                 style={{
@@ -122,7 +119,7 @@ class App extends Component {
               >
                 <ImageZoom
                   image={{ src: item, className: "img", title: item }}
-                  zoomImage={{ alt: "Golden Gate Bridge", src: item }}
+                  zoomImage={{ className: "zoomed", src: item }}
                 />
               </div>
             ))}
