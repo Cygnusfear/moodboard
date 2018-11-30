@@ -26,12 +26,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
-      console.log("wut");
-      let i = shuffleArray(images);
-      this.setState({ images: i });
-      this.grid.updateLayout();
-    }, 20000);
+    // setInterval(() => {
+    //   console.log("wut");
+    //   let i = shuffleArray(images);
+    //   this.setState({ images: i });
+    //   this.grid.updateLayout();
+    // }, 20000);
   }
 
   render() {
