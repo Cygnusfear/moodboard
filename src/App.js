@@ -14,14 +14,14 @@ function importAll(r) {
 
 const gutter = 30;
 const images = shuffleArray(
-  importAll(require.context("./Metropolis/", false, /\.(png|jpe?g|svg)$/)),
+  importAll(require.context("./Images/", false, /\.(png|jpe?g|svg)$/))
 );
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      images: images,
+      images: images
     };
   }
 
