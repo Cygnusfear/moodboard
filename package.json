@@ -9,7 +9,7 @@
     "react-image-tiler": "^1.1.5",
     "react-magic-dropzone": "^1.0.1",
     "react-medium-image-zoom": "^3.0.15",
-    "react-scripts": "1.1.1",
+    "react-scripts": "^2.1.1",
     "react-stack-grid": "^0.7.1"
   },
   "scripts": {
@@ -17,5 +17,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
