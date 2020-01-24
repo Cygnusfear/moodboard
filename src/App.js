@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import "./App.css";
 import StackGrid from "react-stack-grid";
 import ImageZoom from "react-medium-image-zoom";
-import DropZone from "react-magic-dropzone";
 
-const shuffleArray = arr =>
-  arr
-    .map(a => [Math.random(), a])
-    .sort((a, b) => a[0] - b[0])
-    .map(a => a[1]);
+// const shuffleArray = arr =>
+//   arr
+//     .map(a => [Math.random(), a])
+//     .sort((a, b) => a[0] - b[0])
+//     .map(a => a[1]);
 
 function importAll(r) {
   return r.keys().map(r);
@@ -16,9 +15,12 @@ function importAll(r) {
 
 const gutter = 30;
 const images = [];
-// importAll(
-//   require.context("./Images/", false, /\.(png|jpe?g|svg)$/)
-// );
+
+const imported = importAll(
+  require.context("./Images/", false, /\.(png|jpe?g|svg)$/)
+);
+
+console.log(imported);
 
 class App extends Component {
   constructor(props) {
@@ -36,6 +38,9 @@ class App extends Component {
   };
 
   componentDidMount() {
+    if (imported.length > 0) {
+      this.setState({images: imported});
+    }
     console.log(this.dropArea);
     this.dropArea.current.addEventListener("dragover", this.fileDrag, false);
     this.dropArea.current.addEventListener("dragenter", this.fileDrag, false);
@@ -64,6 +69,7 @@ class App extends Component {
       console.log("drop", e.dataTransfer.files);
     let images = [];
     [...e.dataTransfer.files].forEach(img => {
+      console.log(img);
       images.push(URL.createObjectURL(img));
     });
     this.setState({
