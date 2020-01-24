@@ -4,12 +4,12 @@
   "private": true,
   "dependencies": {
     "file-system": "^2.2.2",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "react-image-tiler": "^1.1.5",
     "react-magic-dropzone": "^1.0.1",
-    "react-medium-image-zoom": "^3.0.15",
-    "react-scripts": "^2.1.1",
+    "react-medium-image-zoom": "^3.1.2",
+    "react-scripts": "^2.1.8",
     "react-stack-grid": "^0.7.1"
   },
   "scripts": {
