@@ -20,8 +20,6 @@ const imported = importAll(
   require.context('./Images/', true, /\.(png|jpe?g|svg)$/),
 );
 
-console.log(imported);
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +39,7 @@ class App extends Component {
     if (imported.length > 0) {
       this.setState({ images: imported });
     }
-    console.log(this.dropArea);
+    // console.log(this.dropArea);
     this.dropArea.current.addEventListener('dragover', this.fileDrag, false);
     this.dropArea.current.addEventListener('dragenter', this.fileDrag, false);
 
@@ -71,8 +69,10 @@ class App extends Component {
       console.log('drop', e.dataTransfer.files);
     let images = [];
     [...e.dataTransfer.files].forEach(img => {
-      console.log(img);
-      images.push(URL.createObjectURL(img));
+      if (img.type.includes('image')) {
+        // console.log(img);
+        images.push(URL.createObjectURL(img));
+      }
     });
     this.setState({
       dragging: false,
