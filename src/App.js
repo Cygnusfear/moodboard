@@ -80,6 +80,7 @@ class App extends Component {
   fileDrop = e => {
     e.preventDefault();
     e.stopPropagation();
+    this.setState({ folders: [] });
     if (e.dataTransfer.files.length > 0)
       console.log('drop', e.dataTransfer.files);
     let images = [];

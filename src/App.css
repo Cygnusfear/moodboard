@@ -1,7 +1,6 @@
 .App {
-  font-family: 'Questrial', 'Roboto', system-ui, -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Oxygen,
-    Cantarell, sans-serif;
+  font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Oxygen, Cantarell, sans-serif;
   text-align: center;
   color: #777;
 }
@@ -26,7 +25,16 @@ img {
 
 .dbxFolderButton {
   display: inline;
-  border: 1px solid #0061ff;
+  border: 1px solid #0c6ebe;
+  background-color: #0070e0;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#168add),
+    to(#007ee5)
+  );
+  background-image: linear-gradient(#168add, #007ee5);
   border-radius: 3px;
   margin: 0.2em;
   padding: 0.4em 1em;
@@ -36,13 +44,16 @@ img {
   /* text-transform: uppercase; */
   font-weight: 200;
   font-size: 13px;
-  font-weight: lighter;
+  font-weight: 500;
+  color: white;
 }
 
 .dbxFolderButton:hover,
 .dbxFolderButton:active {
-  background-color: #0061ff;
-  /* color: white; */
+  /* background-color: #0061ff; */
+  /* background-color: linear-gradient(#168add, #007ee5); */
+  color: white;
+
   cursor: pointer;
-  background: #f0f7fd;
+  /* background: #f0f7fd; */
 }
