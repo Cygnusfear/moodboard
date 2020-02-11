@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "dotenv": "^8.2.0",
     "dropbox": "^4.0.30",
     "file-system": "^2.2.2",
     "react": "^16.12.0",

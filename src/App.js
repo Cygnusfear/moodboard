@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import StackGrid from 'react-stack-grid';
 import ImageZoom from 'react-medium-image-zoom';
+import Dropbox from './dropbox.js';
 
 // const shuffleArray = arr =>
 //   arr
@@ -23,13 +24,23 @@ const imported = importAll(
 class App extends Component {
   constructor(props) {
     super(props);
+    const dropbox = new Dropbox(this.dropboxUpdate);
     this.state = {
       images: images,
       dragging: false,
       selected: null,
+      dropbox: dropbox,
+      folders: [],
     };
     this.dropArea = React.createRef();
   }
+
+  dropboxUpdate = update => {
+    this.setState({
+      folders: this.state.dropbox.folders,
+      images: this.state.dropbox.files,
+    });
+  };
 
   onDrop = (accepted, rejected, links) => {
     console.log(accepted); // Have fun
@@ -46,6 +57,10 @@ class App extends Component {
     this.dropArea.current.addEventListener('drop', this.fileDrop, false);
     this.dropArea.current.addEventListener('dragleave', this.leaveDrag, false);
     window.addEventListener('keydown', this.keyPress);
+    if (this.state.dropbox.isAuthenticated()) {
+      console.log('authed');
+      this.setState({ folders: this.state.dropbox.folders });
+    }
   }
 
   fileAdd = url => {};
@@ -71,13 +86,29 @@ class App extends Component {
     [...e.dataTransfer.files].forEach(img => {
       if (img.type.includes('image')) {
         // console.log(img);
+        console.log(img, this.state.images);
         images.push(URL.createObjectURL(img));
+        this.fileSave(img);
       }
     });
     this.setState({
       dragging: false,
       images: [...this.state.images, ...images],
     });
+  };
+
+  fileDelete = file => {
+    let images = [...this.state.images];
+    images.splice(images.indexOf(file), 1);
+    this.setState({ images: images, selected: null });
+    if (file.metadata) {
+      this.state.dropbox.deleteFile(file);
+    }
+  };
+
+  fileSave = file => {
+    console.log('nope', file);
+    this.state.dropbox.uploadFile(file);
   };
 
   hoverOn = e => {
@@ -90,14 +121,12 @@ class App extends Component {
 
   keyPress = e => {
     if (this.state.selected && e.code === 'Backspace') {
-      let images = [...this.state.images];
-      images.splice(images.indexOf(this.state.selected), 1);
-      this.setState({ images: images, selected: null });
+      this.fileDelete(this.state.selected);
     }
   };
 
   render() {
-    const { dragging, images } = this.state;
+    const { dragging, images, dropbox } = this.state;
     return (
       <div className="App">
         <div
@@ -105,8 +134,32 @@ class App extends Component {
           ref={this.dropArea}
           style={{ opacity: dragging ? 0.1 : 1 }}
         >
-          {images.length === 0 &&
-            'Drop images here, make moodboard, wow much! ❤️'}
+          {images.length === 0 && (
+            <div className="header">
+              Drop images here, make moodboard, wow much!{' '}
+              <span role="img" aria-label="heart">
+                ❤️
+              </span>
+              <br />
+            </div>
+          )}
+          {!dropbox.isAuthenticated() && dropbox.client_id && (
+            <a className="dbxFolderButton" href={dropbox.authUrl}>
+              {/* <i className="devicons devicons-dropbox" /> */}
+              Connect to Dropbox
+            </a>
+          )}
+          {dropbox.folders.map((folder, i) => {
+            return (
+              <div
+                key={i}
+                className="dbxFolderButton"
+                onClick={e => dropbox.selectFolder(folder)}
+              >
+                {folder.name}
+              </div>
+            );
+          })}
           <StackGrid
             gridRef={grid => (this.grid = grid)}
             columnWidth={'30%'}
@@ -116,21 +169,29 @@ class App extends Component {
             appearDelay={30}
             monitorImagesLoaded={true}
           >
-            {images.map((item, i) => (
-              <div
-                key={i}
-                style={{
-                  pointerEvents: dragging ? 'none' : 'auto',
-                }}
-                onMouseEnter={() => this.hoverOn(item)}
-                onMouseLeave={() => this.hoverOff(item)}
-              >
-                <ImageZoom
-                  image={{ src: item, className: 'img', title: item }}
-                  zoomImage={{ className: 'zoomed', src: item }}
-                />
-              </div>
-            ))}
+            {images.map((item, i) => {
+              const name = item.metadata ? item.metadata.name : item;
+              const src = item.metadata ? item.link : item;
+              return (
+                <div
+                  key={i}
+                  style={{
+                    pointerEvents: dragging ? 'none' : 'auto',
+                  }}
+                  onMouseEnter={() => this.hoverOn(item)}
+                  onMouseLeave={() => this.hoverOff(item)}
+                >
+                  <ImageZoom
+                    image={{
+                      src: src,
+                      className: 'img',
+                      title: name,
+                    }}
+                    zoomImage={{ className: 'zoomed', src: src }}
+                  />
+                </div>
+              );
+            })}
           </StackGrid>
         </div>
       </div>
