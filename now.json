@@ -1,5 +1,5 @@
 {
   "env": {
-    "REACT_APP_DROPBOX_KEY": "@REACT_APP_DROPBOX_KEY"
+    "REACT_APP_DROPBOX_KEY": "@react_app_dropbox_key"
   }
 }
