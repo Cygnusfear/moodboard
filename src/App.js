@@ -83,7 +83,7 @@ class App extends Component {
   fileDrop = async e => {
     e.preventDefault();
     e.stopPropagation();
-
+    console.log(e);
     this.setState({ folders: [] });
     if (e.dataTransfer.files.length > 0)
       console.log('drop', e.dataTransfer.files);
