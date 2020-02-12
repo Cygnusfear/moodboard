@@ -23,15 +23,41 @@ body {
   width: 100%;
   height: 100%;
   user-select: none;
+  position: relative;
 }
 
 img {
   border-radius: 0px;
+  position: relative;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  margin: auto;
   /* border: 2px solid white; */
 }
 
 img:not(.zoomed):hover {
   /* border: 2px #eee solid; */
-  border-radius: 10px;
-  box-shadow: 0 8px 6px rgba(50, 50, 93, 0.11), 0 2px 3px rgba(0, 0, 0, 0.08);
+  /* margin: auto;
+  width: 102%;
+  margin-left: -1%;
+  height: 102%;
+  margin-top: -2%; */
+  top: -2px;
+  transition: top 0.01s, width 0.01s, height 0.01s;
+  box-shadow: 0 8px 6px rgba(50, 50, 93, 0.11), 0 2px 3px rgba(0, 0, 0, 0.28);
+}
+
+span:not(.zoomed) {
+  margin: auto;
+  position: relative;
+  z-index: 0;
+}
+
+span:not(.zoomed):hover {
+  z-index: 99 !important;
+}
+
+.imageContainer:not(.zoomed):hover {
 }
