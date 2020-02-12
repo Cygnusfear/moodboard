@@ -16,6 +16,14 @@ input {
 .Subtitle {
   margin-bottom: 5em;
   letter-spacing: 0.6px;
+  font-size: 12pt;
+  color: #776c89;
+  opacity: 0.6;
+  position: fixed;
+  margin: auto;
+  text-align: center;
+  bottom: 10%;
+  /* display: none; */
 }
 
 .Subtitle.hide {
@@ -59,7 +67,7 @@ img {
   display: inline-block;
   border: 1px solid #fefefe;
   background: #fefefe;
-  border-radius: 3px;
+  border-radius: 1px;
   margin: 0.6em 0.4em;
   padding: 0.65em 2.2em 0.5em 2.2em;
   user-select: none;

@@ -235,13 +235,7 @@ class App extends Component {
         >
           {(images.length === 0 || waitingForName) && (
             <div className="header">
-              <div className="Title">Moodboard</div>
-              <div className={'Subtitle'}>
-                Drop images here, make moodboard, wow much!{' '}
-                <span role="img" aria-label="heart">
-                  ❤️
-                </span>
-              </div>
+              <div className="Title">Moodboard.</div>
               <br />
               {!dropbox.isAuthenticated() && dropbox.client_id && (
                 <a className="dbxFolderButton connect" href={dropbox.authUrl}>
@@ -271,6 +265,12 @@ class App extends Component {
                   </form>
                 </div>
               )}
+              <div className={'Subtitle'}>
+                Drop images here, wow much!{' '}
+                <span role="img" aria-label="heart">
+                  ❤️
+                </span>
+              </div>
             </div>
           )}
 
