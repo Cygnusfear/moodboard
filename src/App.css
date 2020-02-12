@@ -1,16 +1,16 @@
 .App,
 input {
-  font-family: 'Questrial', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  font-family: 'Gothic A1', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, Ubuntu, 'Helvetica Neue', Oxygen, Cantarell, sans-serif;
   text-align: center;
-  color: #999997;
+  color: #99999f;
 }
 
 .Title {
   font-family: 'Playfair Display', serif;
   font-size: 37pt;
   font-weight: 500;
-  color: #111113;
+  color: #141119;
 }
 
 .Subtitle {
@@ -48,7 +48,7 @@ img {
   background: #fefefe;
   border-radius: 3px;
   margin: 0.6em 0.4em;
-  padding: 0.6em 2.2em;
+  padding: 0.65em 2.2em 0.5em 2.2em;
   user-select: none;
   text-decoration: none;
   /* text-transform: uppercase; */
@@ -61,6 +61,7 @@ img {
   position: relative;
   top: 0;
   letter-spacing: 1px;
+  /* outline: 1px solid red; */
 }
 
 .dbxFolderButton.connect:hover,
@@ -93,9 +94,17 @@ img {
   ); */
   color: white;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 400;
   top: -1px;
   transition: all 0.1s;
+}
+
+.dbxFolderButton:active,
+.dbxFolderButton.connect:active {
+  top: 1.5px;
+  transition: all 0.05s;
+  box-shadow: inset 0 8px -8px rgba(50, 50, 93, 0.55),
+    0 8px 6px rgba(50, 50, 93, 0.05), 0 2px 3px rgba(0, 0, 0, 0.08);
 }
 
 .folderName .folderInput,

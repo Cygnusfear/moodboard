@@ -47,20 +47,18 @@ class App extends Component {
     });
   };
 
-  onDrop = (accepted, rejected, links) => {
-    console.log(accepted); // Have fun
-  };
-
   componentDidMount() {
     if (imported.length > 0) {
       this.setState({ images: imported });
     }
     // console.log(this.dropArea);
-    this.dropArea.current.addEventListener('dragover', this.fileDrag, false);
-    this.dropArea.current.addEventListener('dragenter', this.fileDrag, false);
+    document.addEventListener('dragover', this.fileDrag, false);
+    document.addEventListener('dragenter', this.fileDrag, false);
+    document.addEventListener('dragexit', this.fileDrag, false);
 
-    this.dropArea.current.addEventListener('drop', this.fileDrop, false);
-    this.dropArea.current.addEventListener('dragleave', this.leaveDrag, false);
+    // this.dropArea.current.addEventListener('drop', this.fileDrop, false);
+    document.addEventListener('drop', this.fileDrop, false);
+    document.addEventListener('dragleave', this.leaveDrag, false);
     window.addEventListener('keydown', this.keyPress);
     if (this.state.dropbox.isAuthenticated()) {
       console.log('Authenticated');
@@ -71,7 +69,7 @@ class App extends Component {
   fileDrag = e => {
     e.preventDefault();
     e.stopPropagation();
-    // console.log("drag", e);
+    console.log('drag', e, e.originalEvent);
     if (!this.state.dragging) this.setState({ dragging: true });
   };
 
@@ -83,28 +81,71 @@ class App extends Component {
   fileDrop = async e => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(e);
-    this.setState({ folders: [] });
-    if (e.dataTransfer.files.length > 0)
+
+    this.setState({ dragging: false, folders: [] });
+    if (e.dataTransfer.files.length > 0) {
       console.log('drop', e.dataTransfer.files);
+    } else {
+      // check if we have a file URL
+      let html = e.dataTransfer.getData('text/html'),
+        match = html && /\bsrc="?([^"\s]+)"?\s*/.exec(html),
+        url = match && match[1];
+
+      if (url) {
+        this.uploadFromURL(url);
+      }
+      return;
+    }
+
+    //Check if we are in Dropbox mode and new folder
     const waitForName =
       this.state.dropbox.isAuthenticated() && this.state.dropbox.path === '';
+
     if (!waitForName) {
       this.saveQueue(e.dataTransfer.files);
     } else {
+      //Temp queue while waiting for name
       queuedEvent = e.dataTransfer.files;
       this.input.current.focus();
     }
     this.setState({
-      dragging: false,
       images: [...this.state.images, ...images],
       appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : '',
       waitingForName: waitForName,
     });
   };
 
+  uploadFromURL(url) {
+    var img = new Image();
+    var c = document.createElement('canvas');
+    var ctx = c.getContext('2d');
+
+    img.onload = function() {
+      c.width = this.naturalWidth; // update canvas size to match image
+      c.height = this.naturalHeight;
+      ctx.drawImage(this, 0, 0); // draw in image
+      c.toBlob(function(blob) {
+        // get content as PNG blob
+
+        // call our main function
+        this.fileSave([blob]);
+        this.setState({
+          dragging: false,
+          images: [...this.state.images, ...images],
+          appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : '',
+        });
+      }, 'image/png');
+    };
+    img.onerror = function() {
+      alert('Error in uploading');
+    };
+    img.crossOrigin = ''; // if from different origin
+    img.src = url;
+  }
+
   saveQueue(files) {
-    console.log(files);
+    if (files.length === 0) return;
+    console.log('saving', files);
     let images = [];
     [...files].forEach(img => {
       if (img.type.includes('image')) {
@@ -165,6 +206,9 @@ class App extends Component {
     }
     if (e.code === 'ArrowLeft') {
       this.setState({ gutter: this.state.gutter - 5 });
+    }
+    if (e.code === 'Escape') {
+      window.location.reload();
     }
   };
 
