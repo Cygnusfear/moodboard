@@ -36,6 +36,10 @@ img {
   overflow: hidden;
 }
 
+.imageContainer img {
+  background-color: grey;
+}
+
 .devicons {
   vertical-align: sub;
   margin-right: 0.2em;

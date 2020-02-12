@@ -71,7 +71,8 @@ class DropboxWrapper {
         url: file.url,
       })
       .then(res => {
-        console.log(res);
+        file.metadata = { path_lower: this.path.path_lower + '/' + file.name };
+        console.log(file);
       });
   }
 

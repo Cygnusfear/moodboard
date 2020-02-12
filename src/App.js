@@ -97,6 +97,8 @@ class App extends Component {
         files.push({
           type: 'image/url',
           url: url,
+          link: url,
+          metadata: {},
           name:
             (
               Math.random()
@@ -145,7 +147,7 @@ class App extends Component {
           images.push(URL.createObjectURL(img));
           this.fileSave(img);
         } else {
-          images.push(img.url);
+          images.push(img);
           this.uploadFromURL(img);
         }
       }
@@ -158,6 +160,9 @@ class App extends Component {
   }
 
   selectFolder = folder => {
+    this.setState({
+      appState: 'ready',
+    });
     this.state.dropbox.selectFolder(folder);
   };
 
@@ -174,6 +179,7 @@ class App extends Component {
     let images = [...this.state.images];
     images.splice(images.indexOf(file), 1);
     this.setState({ images: images, selected: null });
+    console.log(file);
     if (file.metadata) {
       this.state.dropbox.deleteFile(file);
     }
@@ -275,6 +281,7 @@ class App extends Component {
                   style={{
                     pointerEvents: dragging ? 'none' : 'auto',
                   }}
+                  className="imageContainer"
                   onMouseEnter={() => this.hoverOn(item)}
                   onMouseLeave={() => this.hoverOff(item)}
                 >
