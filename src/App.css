@@ -76,8 +76,8 @@ img {
   );
   color: white;
   cursor: pointer;
-  top: -4px;
-  transition: all 1s;
+  top: -1px;
+  transition: all 0.1s;
 }
 
 .dbxFolderButton:hover,
@@ -94,6 +94,8 @@ img {
   color: white;
   cursor: pointer;
   font-weight: 600;
+  top: -1px;
+  transition: all 0.1s;
 }
 
 .folderName .folderInput,

@@ -117,7 +117,7 @@ class DropboxWrapper {
       // Set the login anchors href using dbx.getAuthenticationUrl()
       this.dbx = new Dropbox.Dropbox({ clientId: this.client_id });
       this.authUrl = this.dbx.getAuthenticationUrl(
-        'http://localhost:3000/oauthredirect',
+        window.location.origin + '/oauthredirect',
       );
       // document.getElementById('authlink').href = authUrl;
     }

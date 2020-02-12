@@ -38,6 +38,7 @@ class App extends Component {
       appState: 'init',
     };
     this.dropArea = React.createRef();
+    console.log(process.env.NODE_ENV, window.location);
   }
 
   dropboxUpdate = update => {
