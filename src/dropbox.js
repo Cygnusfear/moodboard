@@ -95,9 +95,10 @@ class DropboxWrapper {
         if (files.length > 0) {
           files.forEach(e => {
             this.dbx.filesGetTemporaryLink({ path: e.path_lower }).then(res => {
-              this.files.push(res);
-              this.updateFN();
-              // console.log(res, this.files);
+              if (!this.files.map(e => e.link === res.link).includes(true)) {
+                this.files.push(res);
+                this.updateFN();
+              }
             });
           });
           // console.log(this.files);

@@ -8,7 +8,7 @@ input {
 
 .Title {
   font-family: 'Playfair Display', serif;
-  font-size: 37pt;
+  font-size: 59pt;
   font-weight: 500;
   color: #141119;
 }
@@ -16,6 +16,15 @@ input {
 .Subtitle {
   margin-bottom: 5em;
   letter-spacing: 0.6px;
+}
+
+.Subtitle.hide {
+  opacity: 0;
+}
+
+.Subtitle.fadeIn {
+  opacity: 1;
+  transition: all 5s;
 }
 
 .header {

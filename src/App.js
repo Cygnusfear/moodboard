@@ -36,6 +36,7 @@ class App extends Component {
       folders: [],
       waitingForName: false,
       appState: 'init',
+      showSubtitle: false,
     };
     this.dropArea = React.createRef();
   }
@@ -64,6 +65,9 @@ class App extends Component {
       console.log('Authenticated');
       this.setState({ folders: this.state.dropbox.folders });
     }
+    setTimeout(() => {
+      this.setState({ showSubtitle: true });
+    }, 5000);
   }
 
   fileDrag = e => {
@@ -214,7 +218,14 @@ class App extends Component {
   };
 
   render() {
-    const { gutter, dragging, images, dropbox, waitingForName } = this.state;
+    const {
+      gutter,
+      dragging,
+      images,
+      dropbox,
+      waitingForName,
+      showSubtitle,
+    } = this.state;
     return (
       <div className={'App ' + (waitingForName ? 'enterName' : '')}>
         <div
@@ -225,7 +236,7 @@ class App extends Component {
           {(images.length === 0 || waitingForName) && (
             <div className="header">
               <div className="Title">Moodboard</div>
-              <div className="Subtitle">
+              <div className={'Subtitle'}>
                 Drop images here, make moodboard, wow much!{' '}
                 <span role="img" aria-label="heart">
                   ❤️
