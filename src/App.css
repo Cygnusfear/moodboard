@@ -24,6 +24,7 @@ input {
   text-align: center;
   margin: auto;
   margin-top: 100px;
+  position: relative;
 }
 
 span a {
@@ -42,7 +43,7 @@ img {
 
 .folderName .folderInput,
 .dbxFolderButton {
-  display: inline-flex;
+  display: inline-block;
   border: 1px solid #fefefe;
   background: #fefefe;
   border-radius: 3px;
@@ -57,6 +58,8 @@ img {
   color: #999;
   box-shadow: 0 8px 6px rgba(50, 50, 93, 0.05), 0 2px 3px rgba(0, 0, 0, 0.08);
   text-transform: uppercase;
+  position: relative;
+  top: 0;
   letter-spacing: 1px;
 }
 
@@ -73,6 +76,8 @@ img {
   );
   color: white;
   cursor: pointer;
+  top: -4px;
+  transition: all 1s;
 }
 
 .dbxFolderButton:hover,
@@ -88,6 +93,7 @@ img {
   ); */
   color: white;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .folderName .folderInput,
