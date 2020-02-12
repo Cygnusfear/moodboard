@@ -16,7 +16,6 @@ function importAll(r) {
 
 let queuedEvent = null;
 
-const gutter = 30;
 const images = [];
 
 const imported = importAll(
@@ -29,6 +28,7 @@ class App extends Component {
     const dropbox = new Dropbox(this.dropboxUpdate);
     this.input = React.createRef();
     this.state = {
+      gutter: 30,
       images: images,
       dragging: false,
       selected: null,
@@ -90,9 +90,10 @@ class App extends Component {
     const waitForName =
       this.state.dropbox.isAuthenticated() && this.state.dropbox.path === '';
     if (!waitForName) {
-      this.saveQueue(e);
+      this.saveQueue(e.dataTransfer.files);
     } else {
-      queuedEvent = e;
+      queuedEvent = e.dataTransfer.files;
+      this.input.current.focus();
     }
     this.setState({
       dragging: false,
@@ -102,9 +103,10 @@ class App extends Component {
     });
   };
 
-  saveQueue(e) {
+  saveQueue(files) {
+    console.log(files);
     let images = [];
-    [...e.dataTransfer.files].forEach(img => {
+    [...files].forEach(img => {
       if (img.type.includes('image')) {
         // console.log(img);
         console.log(img, this.state.images);
@@ -123,10 +125,12 @@ class App extends Component {
     this.state.dropbox.selectFolder(folder);
   };
 
-  createFolder = async e => {
-    console.log(this.input.current.value);
-    await this.state.dropbox.createFolder(this.input.current.value);
+  createFolder = e => {
+    e.stopPropagation();
+    e.preventDefault();
+    this.state.dropbox.createFolder(this.input.current.value);
     this.setState({ waitingForName: false });
+    console.log(this.input.current.value, this);
     this.saveQueue(queuedEvent);
   };
 
@@ -156,10 +160,23 @@ class App extends Component {
     if (this.state.selected && e.code === 'Backspace') {
       this.fileDelete(this.state.selected);
     }
+    if (e.code === 'ArrowRight') {
+      this.setState({ gutter: this.state.gutter + 5 });
+    }
+    if (e.code === 'ArrowLeft') {
+      this.setState({ gutter: this.state.gutter - 5 });
+    }
   };
 
   render() {
-    const { dragging, images, dropbox, waitingForName, appState } = this.state;
+    const {
+      gutter,
+      dragging,
+      images,
+      dropbox,
+      waitingForName,
+      appState,
+    } = this.state;
     return (
       <div className={'App ' + (waitingForName ? 'enterName' : '')}>
         <div

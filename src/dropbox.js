@@ -23,12 +23,13 @@ class DropboxWrapper {
     const parse = parseQueryString(window.location.hash);
     if (parse.access_token) {
       this.access_token = parse.access_token;
-      // const token = window.localStorage.setItem('token', this.access_token);
+      const token = window.localStorage.setItem('token', this.access_token);
     } else {
       const token = window.localStorage.getItem('token');
       if (token) {
         console.log(token);
         this.access_token = token;
+        return this.access_token;
       }
     }
     //console.error(parse); //stacktrace
@@ -65,7 +66,7 @@ class DropboxWrapper {
 
   async createFolder(folder) {
     this.folders = [];
-    this.path = '/' + folder;
+    this.path = { path_lower: '/' + folder };
     await this.dbx.filesCreateFolder({ path: '/' + folder });
     return true;
   }
