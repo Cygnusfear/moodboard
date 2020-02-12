@@ -54,7 +54,7 @@ class App extends Component {
     // console.log(this.dropArea);
     document.addEventListener('dragover', this.fileDrag, false);
     document.addEventListener('dragenter', this.fileDrag, false);
-    document.addEventListener('dragexit', this.fileDrag, false);
+    // document.addEventListener('dragexit', this.fileDrag, false);
 
     // this.dropArea.current.addEventListener('drop', this.fileDrop, false);
     document.addEventListener('drop', this.fileDrop, false);
@@ -69,7 +69,7 @@ class App extends Component {
   fileDrag = e => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('drag', e, e.originalEvent);
+    // console.log('drag', e, e.originalEvent);
     if (!this.state.dragging) this.setState({ dragging: true });
   };
 
@@ -83,8 +83,9 @@ class App extends Component {
     e.stopPropagation();
 
     this.setState({ dragging: false, folders: [] });
-    if (e.dataTransfer.files.length > 0) {
-      console.log('drop', e.dataTransfer.files);
+    let files = e.dataTransfer.files.length > 0 ? e.dataTransfer.files : [];
+    if (files > 0) {
+      console.log('drop', files);
     } else {
       // check if we have a file URL
       let html = e.dataTransfer.getData('text/html'),
@@ -92,9 +93,21 @@ class App extends Component {
         url = match && match[1];
 
       if (url) {
-        this.uploadFromURL(url);
+        console.log('url', url, html);
+        files.push({
+          type: 'image/url',
+          url: url,
+          name:
+            (
+              Math.random()
+                .toString(36)
+                .substring(2, 15) +
+              Math.random()
+                .toString(36)
+                .substring(2, 15)
+            ).toString() + '.jpg',
+        });
       }
-      return;
     }
 
     //Check if we are in Dropbox mode and new folder
@@ -102,10 +115,10 @@ class App extends Component {
       this.state.dropbox.isAuthenticated() && this.state.dropbox.path === '';
 
     if (!waitForName) {
-      this.saveQueue(e.dataTransfer.files);
+      this.saveQueue(files);
     } else {
       //Temp queue while waiting for name
-      queuedEvent = e.dataTransfer.files;
+      queuedEvent = files;
       this.input.current.focus();
     }
     this.setState({
@@ -115,32 +128,9 @@ class App extends Component {
     });
   };
 
-  uploadFromURL(url) {
-    var img = new Image();
-    var c = document.createElement('canvas');
-    var ctx = c.getContext('2d');
-
-    img.onload = function() {
-      c.width = this.naturalWidth; // update canvas size to match image
-      c.height = this.naturalHeight;
-      ctx.drawImage(this, 0, 0); // draw in image
-      c.toBlob(function(blob) {
-        // get content as PNG blob
-
-        // call our main function
-        this.fileSave([blob]);
-        this.setState({
-          dragging: false,
-          images: [...this.state.images, ...images],
-          appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : '',
-        });
-      }, 'image/png');
-    };
-    img.onerror = function() {
-      alert('Error in uploading');
-    };
-    img.crossOrigin = ''; // if from different origin
-    img.src = url;
+  uploadFromURL(file) {
+    if (this.state.dropbox.isAuthenticated())
+      this.state.dropbox.uploadUrl(file);
   }
 
   saveQueue(files) {
@@ -151,8 +141,13 @@ class App extends Component {
       if (img.type.includes('image')) {
         // console.log(img);
         console.log(img, this.state.images);
-        images.push(URL.createObjectURL(img));
-        this.fileSave(img);
+        if (img.type !== 'image/url') {
+          images.push(URL.createObjectURL(img));
+          this.fileSave(img);
+        } else {
+          images.push(img.url);
+          this.uploadFromURL(img);
+        }
       }
     });
     this.setState({
@@ -202,10 +197,10 @@ class App extends Component {
       this.fileDelete(this.state.selected);
     }
     if (e.code === 'ArrowRight') {
-      this.setState({ gutter: this.state.gutter + 5 });
+      this.setState({ gutter: 30 });
     }
     if (e.code === 'ArrowLeft') {
-      this.setState({ gutter: this.state.gutter - 5 });
+      this.setState({ gutter: 0 });
     }
     if (e.code === 'Escape') {
       window.location.reload();
@@ -213,14 +208,7 @@ class App extends Component {
   };
 
   render() {
-    const {
-      gutter,
-      dragging,
-      images,
-      dropbox,
-      waitingForName,
-      appState,
-    } = this.state;
+    const { gutter, dragging, images, dropbox, waitingForName } = this.state;
     return (
       <div className={'App ' + (waitingForName ? 'enterName' : '')}>
         <div
@@ -280,7 +268,6 @@ class App extends Component {
             className="stackGrid"
           >
             {images.map((item, i) => {
-              const name = item.metadata ? item.metadata.name : item;
               const src = item.metadata ? item.link : item;
               return (
                 <div

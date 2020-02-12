@@ -23,7 +23,7 @@ class DropboxWrapper {
     const parse = parseQueryString(window.location.hash);
     if (parse.access_token) {
       this.access_token = parse.access_token;
-      const token = window.localStorage.setItem('token', this.access_token);
+      window.localStorage.setItem('token', this.access_token);
     } else {
       const token = window.localStorage.getItem('token');
       if (token) {
@@ -36,7 +36,7 @@ class DropboxWrapper {
   }
 
   unSetToken() {
-    const token = window.localStorage.removeItem('token');
+    window.localStorage.removeItem('token');
   }
 
   // If the user was just redirected from authenticating, the urls hash will
@@ -57,6 +57,18 @@ class DropboxWrapper {
       .filesUpload({
         path: this.path.path_lower + '/' + file.name,
         contents: file,
+      })
+      .then(res => {
+        console.log(res);
+      });
+  }
+
+  uploadUrl(file) {
+    console.log('urlupping', file);
+    this.dbx
+      .filesSaveUrl({
+        path: this.path.path_lower + '/' + file.name,
+        url: file.url,
       })
       .then(res => {
         console.log(res);
