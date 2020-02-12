@@ -15,16 +15,28 @@ class DropboxWrapper {
     this.dbx = {};
     this.updateFN = callback;
     this.path = '';
-    console.log(this.client_id);
     this.init();
   }
 
   // Parses the url and gets the access token if it is in the urls hash
   getAccessTokenFromUrl() {
     const parse = parseQueryString(window.location.hash);
-    this.access_token = parse.access_token;
-    console.error(parse);
+    if (parse.access_token) {
+      this.access_token = parse.access_token;
+      // const token = window.localStorage.setItem('token', this.access_token);
+    } else {
+      const token = window.localStorage.getItem('token');
+      if (token) {
+        console.log(token);
+        this.access_token = token;
+      }
+    }
+    //console.error(parse); //stacktrace
     return parse.access_token;
+  }
+
+  unSetToken() {
+    const token = window.localStorage.removeItem('token');
   }
 
   // If the user was just redirected from authenticating, the urls hash will
@@ -40,6 +52,7 @@ class DropboxWrapper {
 
   uploadFile(file) {
     console.log('upping', file);
+    if (!this.path.path_lower) return;
     this.dbx
       .filesUpload({
         path: this.path.path_lower + '/' + file.name,
@@ -50,10 +63,18 @@ class DropboxWrapper {
       });
   }
 
+  async createFolder(folder) {
+    this.folders = [];
+    this.path = '/' + folder;
+    await this.dbx.filesCreateFolder({ path: '/' + folder });
+    return true;
+  }
+
   selectFolder(folder) {
     this.folders = [];
     this.files = [];
     this.path = folder;
+    this.updateFN();
     this.dbx
       .filesListFolder({ path: folder.path_lower })
       .then(response => {

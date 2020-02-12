@@ -14,6 +14,8 @@ function importAll(r) {
   return r.keys().map(r);
 }
 
+let queuedEvent = null;
+
 const gutter = 30;
 const images = [];
 
@@ -25,12 +27,15 @@ class App extends Component {
   constructor(props) {
     super(props);
     const dropbox = new Dropbox(this.dropboxUpdate);
+    this.input = React.createRef();
     this.state = {
       images: images,
       dragging: false,
       selected: null,
       dropbox: dropbox,
       folders: [],
+      waitingForName: false,
+      appState: 'init',
     };
     this.dropArea = React.createRef();
   }
@@ -58,12 +63,10 @@ class App extends Component {
     this.dropArea.current.addEventListener('dragleave', this.leaveDrag, false);
     window.addEventListener('keydown', this.keyPress);
     if (this.state.dropbox.isAuthenticated()) {
-      console.log('authed');
+      console.log('Authenticated');
       this.setState({ folders: this.state.dropbox.folders });
     }
   }
-
-  fileAdd = url => {};
 
   fileDrag = e => {
     e.preventDefault();
@@ -77,12 +80,29 @@ class App extends Component {
     e.stopPropagation();
   };
 
-  fileDrop = e => {
+  fileDrop = async e => {
     e.preventDefault();
     e.stopPropagation();
+
     this.setState({ folders: [] });
     if (e.dataTransfer.files.length > 0)
       console.log('drop', e.dataTransfer.files);
+    const waitForName =
+      this.state.dropbox.isAuthenticated() && this.state.dropbox.path === '';
+    if (!waitForName) {
+      this.saveQueue(e);
+    } else {
+      queuedEvent = e;
+    }
+    this.setState({
+      dragging: false,
+      images: [...this.state.images, ...images],
+      appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : '',
+      waitingForName: waitForName,
+    });
+  };
+
+  saveQueue(e) {
     let images = [];
     [...e.dataTransfer.files].forEach(img => {
       if (img.type.includes('image')) {
@@ -95,7 +115,19 @@ class App extends Component {
     this.setState({
       dragging: false,
       images: [...this.state.images, ...images],
+      appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : '',
     });
+  }
+
+  selectFolder = folder => {
+    this.state.dropbox.selectFolder(folder);
+  };
+
+  createFolder = async e => {
+    console.log(this.input.current.value);
+    await this.state.dropbox.createFolder(this.input.current.value);
+    this.setState({ waitingForName: false });
+    this.saveQueue(queuedEvent);
   };
 
   fileDelete = file => {
@@ -108,8 +140,8 @@ class App extends Component {
   };
 
   fileSave = file => {
-    console.log('nope', file);
-    this.state.dropbox.uploadFile(file);
+    if (this.state.dropbox.isAuthenticated())
+      this.state.dropbox.uploadFile(file);
   };
 
   hoverOn = e => {
@@ -127,40 +159,55 @@ class App extends Component {
   };
 
   render() {
-    const { dragging, images, dropbox } = this.state;
+    const { dragging, images, dropbox, waitingForName, appState } = this.state;
     return (
-      <div className="App">
+      <div className={'App ' + (waitingForName ? 'enterName' : '')}>
         <div
           className="Gallery"
           ref={this.dropArea}
           style={{ opacity: dragging ? 0.1 : 1 }}
         >
-          {images.length === 0 && (
+          {(images.length === 0 || waitingForName) && (
             <div className="header">
-              Drop images here, make moodboard, wow much!{' '}
-              <span role="img" aria-label="heart">
-                ❤️
-              </span>
+              <div className="Title">Moodboard</div>
+              <div className="Subtitle">
+                Drop images here, make moodboard, wow much!{' '}
+                <span role="img" aria-label="heart">
+                  ❤️
+                </span>
+              </div>
               <br />
+              {!dropbox.isAuthenticated() && dropbox.client_id && (
+                <a className="dbxFolderButton connect" href={dropbox.authUrl}>
+                  {/* <i className="devicons devicons-dropbox" /> */}
+                  Connect to Dropbox
+                </a>
+              )}
+              {dropbox.folders.map((folder, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="dbxFolderButton"
+                    onClick={e => this.selectFolder(folder)}
+                  >
+                    {folder.name}
+                  </div>
+                );
+              })}
+              {dropbox.isAuthenticated() && dropbox.client_id && (
+                <div className="folderName">
+                  <form onSubmit={e => this.createFolder(e)} action="">
+                    <input
+                      className="folderInput"
+                      ref={this.input}
+                      placeholder="Enter name for the moodboard"
+                    ></input>
+                  </form>
+                </div>
+              )}
             </div>
           )}
-          {!dropbox.isAuthenticated() && dropbox.client_id && (
-            <a className="dbxFolderButton" href={dropbox.authUrl}>
-              {/* <i className="devicons devicons-dropbox" /> */}
-              Connect to Dropbox
-            </a>
-          )}
-          {dropbox.folders.map((folder, i) => {
-            return (
-              <div
-                key={i}
-                className="dbxFolderButton"
-                onClick={e => dropbox.selectFolder(folder)}
-              >
-                {folder.name}
-              </div>
-            );
-          })}
+
           <StackGrid
             gridRef={grid => (this.grid = grid)}
             columnWidth={'30%'}
@@ -169,6 +216,7 @@ class App extends Component {
             duration={0}
             appearDelay={30}
             monitorImagesLoaded={true}
+            className="stackGrid"
           >
             {images.map((item, i) => {
               const name = item.metadata ? item.metadata.name : item;
@@ -186,7 +234,7 @@ class App extends Component {
                     image={{
                       src: src,
                       className: 'img',
-                      title: name,
+                      title: '',
                     }}
                     zoomImage={{ className: 'zoomed', src: src }}
                   />

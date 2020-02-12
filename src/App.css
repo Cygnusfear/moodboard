@@ -1,8 +1,29 @@
-.App {
-  font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Oxygen, Cantarell, sans-serif;
+.App,
+input {
+  font-family: 'Questrial', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Ubuntu, 'Helvetica Neue', Oxygen, Cantarell, sans-serif;
   text-align: center;
-  color: #777;
+  color: #999997;
+}
+
+.Title {
+  font-family: 'Playfair Display', serif;
+  font-size: 37pt;
+  font-weight: 500;
+  color: #111113;
+}
+
+.Subtitle {
+  margin-bottom: 5em;
+  letter-spacing: 0.6px;
+}
+
+.header {
+  width: 100%;
+  max-width: 550px;
+  text-align: center;
+  margin: auto;
+  margin-top: 100px;
 }
 
 span a {
@@ -19,13 +40,29 @@ img {
   margin-right: 0.2em;
 }
 
-.header {
-  margin-bottom: 1.5em;
+.folderName .folderInput,
+.dbxFolderButton {
+  display: inline-flex;
+  border: 1px solid #fefefe;
+  background: #fefefe;
+  border-radius: 3px;
+  margin: 0.6em 0.4em;
+  padding: 0.6em 2.2em;
+  user-select: none;
+  text-decoration: none;
+  /* text-transform: uppercase; */
+  font-weight: 200;
+  font-size: 13px;
+  font-weight: 400;
+  color: #999;
+  box-shadow: 0 8px 6px rgba(50, 50, 93, 0.05), 0 2px 3px rgba(0, 0, 0, 0.08);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.dbxFolderButton {
-  display: inline;
-  border: 1px solid #0c6ebe;
+.dbxFolderButton.connect:hover,
+.dbxFolderButton.connect:active {
+  border: 1px solid #007ee5;
   background-color: #0070e0;
   background-image: -webkit-gradient(
     linear,
@@ -34,26 +71,57 @@ img {
     from(#168add),
     to(#007ee5)
   );
-  background-image: linear-gradient(#168add, #007ee5);
-  border-radius: 3px;
-  margin: 0.2em;
-  padding: 0.4em 1em;
-  user-select: none;
-  color: #0061ff;
-  text-decoration: none;
-  /* text-transform: uppercase; */
-  font-weight: 200;
-  font-size: 13px;
-  font-weight: 500;
   color: white;
+  cursor: pointer;
 }
 
 .dbxFolderButton:hover,
 .dbxFolderButton:active {
-  /* background-color: #0061ff; */
-  /* background-color: linear-gradient(#168add, #007ee5); */
+  border: 1px solid red;
+  background-color: red;
+  /* background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#168add),
+    to(#007ee5)
+  ); */
   color: white;
-
   cursor: pointer;
-  /* background: #f0f7fd; */
+}
+
+.folderName .folderInput,
+.folderName .folderInput:focus {
+  width: 50%;
+  max-width: 390px;
+  border: 0;
+  background: none;
+  border-bottom: 1px solid #999997;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.enterName .img,
+.enterName .dbxFolderButton {
+  opacity: 1;
+  pointer-events: all;
+  display: none;
+}
+
+.enterName .folderName .folderInput {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.folderInput::placeholder {
+  color: #ccc;
+  transition: all 0.2s;
+}
+
+.folderInput:focus::placeholder {
+  color: #efefef;
+  transition: all 4s;
 }
