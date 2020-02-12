@@ -27,7 +27,6 @@ class DropboxWrapper {
     } else {
       const token = window.localStorage.getItem('token');
       if (token) {
-        console.log(token);
         this.access_token = token;
         return this.access_token;
       }
