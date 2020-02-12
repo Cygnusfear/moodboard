@@ -1,0 +1,5 @@
+{
+  "env": {
+    "REACT_APP_DROPBOX_KEY": "@REACT_APP_DROPBOX_KEY"
+  }
+}
