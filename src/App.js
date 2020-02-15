@@ -218,14 +218,7 @@ class App extends Component {
   };
 
   render() {
-    const {
-      gutter,
-      dragging,
-      images,
-      dropbox,
-      waitingForName,
-      showSubtitle,
-    } = this.state;
+    const { gutter, dragging, images, dropbox, waitingForName } = this.state;
     return (
       <div className={'App ' + (waitingForName ? 'enterName' : '')}>
         <div
