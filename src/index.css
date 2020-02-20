@@ -34,11 +34,9 @@ img {
   height: 100%;
   z-index: 0;
   margin: auto;
-  /* border: 2px solid white; */
 }
 
 img:not(.zoomed):hover {
-  /* border: 2px #eee solid; */
   /* margin: auto;
   width: 102%;
   margin-left: -1%;
