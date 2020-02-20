@@ -1,6 +1,6 @@
 import Dropbox from 'dropbox';
 import { parseQueryString } from './utils.js';
-const CLIENT_ID = process.env.REACT_APP_DROPBOX_KEY;
+const CLIENT_ID = 'uw835qwsdnwfck3';
 
 class DropboxWrapper {
   constructor(callback) {
