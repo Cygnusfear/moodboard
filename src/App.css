@@ -13,26 +13,31 @@ input {
   color: #141119;
 }
 
-.Subtitle {
+.subtitle {
   margin-bottom: 5em;
   letter-spacing: 0.6px;
-  font-size: 12pt;
+  line-height: 19pt;
   color: #776c89;
   opacity: 0.6;
   position: fixed;
   margin: auto;
-  text-align: center;
   bottom: 10%;
+  width: 100%;
+  left: 0;
+  opacity: 1;
+  font-size: 9pt;
+  opacity: 1;
   /* display: none; */
 }
 
-.Subtitle.hide {
+.subtitle.hide {
   opacity: 0;
+  transition: opacity 5s;
 }
 
-.Subtitle.fadeIn {
+.subtitle {
   opacity: 1;
-  transition: all 5s;
+  transition: opacity 5s;
 }
 
 .header {
@@ -166,4 +171,14 @@ img {
 
 .loading .Title {
   color: "#ccc";
+}
+
+
+.key {
+  border: 1px solid #E7E7E7;
+  background: #F5F5F5;
+  padding: 4pt;
+  text-align: center;
+  display: inline;
+  border-radius: 5px;
 }

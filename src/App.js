@@ -68,17 +68,29 @@ class App extends Component {
     }
     setTimeout(() => {
       this.setState({ showSubtitle: true });
-    }, 5000);
-    window.history.pushState({name: "browserBack"}, "on browser back click", window.location.href);
-    window.history.pushState({name: "browserBack"}, "on browser back click", window.location.href);
-    window.addEventListener('popstate', (event) => {
-      if (event.state) {
-        this.state.dropbox.selectFolder({path_lower:'/moodboard'});
-        //do your code here
-        event.stopPropagation();
-        event.preventDefault();
-      }
-     }, false);
+    }, 1000);
+    window.history.pushState(
+      { name: 'browserBack' },
+      'on browser back click',
+      window.location.href,
+    );
+    window.history.pushState(
+      { name: 'browserBack' },
+      'on browser back click',
+      window.location.href,
+    );
+    window.addEventListener(
+      'popstate',
+      event => {
+        if (event.state) {
+          this.state.dropbox.selectFolder({ path_lower: '/moodboard' });
+          //do your code here
+          event.stopPropagation();
+          event.preventDefault();
+        }
+      },
+      false,
+    );
   }
 
   fileDrag = e => {
@@ -178,7 +190,11 @@ class App extends Component {
     this.setState({
       appState: 'loading',
     });
-    window.history.pushState({name: "browserBack"}, "on browser back click", window.location.href);
+    window.history.pushState(
+      { name: 'browserBack' },
+      'on browser back click',
+      window.location.href,
+    );
     this.state.dropbox.selectFolder(folder);
   };
 
@@ -225,14 +241,29 @@ class App extends Component {
       this.setState({ gutter: 0 });
     }
     if (e.code === 'Escape') {
-      this.state.dropbox.selectFolder({path_lower:'/moodboard'});
+      this.state.dropbox.selectFolder({ path_lower: '/moodboard' });
     }
   };
 
   render() {
-    const { gutter, dragging, images, dropbox, waitingForName, appState } = this.state;
+    const {
+      gutter,
+      dragging,
+      images,
+      dropbox,
+      waitingForName,
+      appState,
+      showSubtitle
+    } = this.state;
     return (
-      <div className={'App ' + (waitingForName ? 'enterName' : '') + ' ' + (appState === "loading" ? "loading" : '') }>
+      <div
+        className={
+          'App ' +
+          (waitingForName ? 'enterName' : '') +
+          ' ' +
+          (appState === 'loading' ? 'loading' : '')
+        }
+      >
         <div
           className="Gallery"
           ref={this.dropArea}
@@ -259,23 +290,19 @@ class App extends Component {
                   </div>
                 );
               })}
-              {dropbox.isAuthenticated() && dropbox.client_id && this.state.dropbox.isRoot() && (
-                <div className="folderName">
-                  <form onSubmit={e => this.createFolder(e)} action="">
-                    <input
-                      className="folderInput"
-                      ref={this.input}
-                      placeholder="Enter name for the moodboard"
-                    ></input>
-                  </form>
-                </div>
-              )}
-              <div className={'Subtitle'}>
-                Drop images here, wow much!{' '}
-                <span role="img" aria-label="heart">
-                  ❤️
-                </span>
-              </div>
+              {dropbox.isAuthenticated() &&
+                dropbox.client_id &&
+                this.state.dropbox.isRoot() && (
+                  <div className="folderName">
+                    <form onSubmit={e => this.createFolder(e)} action="">
+                      <input
+                        className="folderInput"
+                        ref={this.input}
+                        placeholder="Enter name for the moodboard"
+                      ></input>
+                    </form>
+                  </div>
+                )}
             </div>
           )}
 
@@ -313,6 +340,11 @@ class App extends Component {
               );
             })}
           </StackGrid>
+        </div>
+        <div className={'subtitle' +(showSubtitle && images.length < 1 ? '' : 'hide')}>
+          <b>Drag files into the moodboard to add or create a new board</b>
+          <br /> <div className="key">Backspace</div> Delete item under cursor{' '}
+          <div className="key">Esc</div> Back
         </div>
       </div>
     );
