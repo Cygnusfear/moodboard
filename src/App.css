@@ -32,12 +32,12 @@ input {
 
 .subtitle.hide {
   opacity: 0;
-  transition: opacity 5s;
+  transition: opacity 0.5s;
 }
 
 .subtitle {
   opacity: 1;
-  transition: opacity 5s;
+  transition: opacity 0.5s;
 }
 
 .header {
@@ -172,8 +172,6 @@ img {
 .loading .Title {
   color: "#ccc";
 }
-
-
 .key {
   border: 1px solid #E7E7E7;
   background: #F5F5F5;

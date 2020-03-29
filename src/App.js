@@ -341,8 +341,8 @@ class App extends Component {
             })}
           </StackGrid>
         </div>
-        <div className={'subtitle' +(showSubtitle && images.length < 1 ? '' : 'hide')}>
-          <b>Drag files into the moodboard to add or create a new board</b>
+        <div className={'subtitle' +(!showSubtitle || images.length < 1 ? '' : ' hide')}>
+          <b>Drag images into the page to add or create a new board</b>
           <br /> <div className="key">Backspace</div> Delete item under cursor{' '}
           <div className="key">Esc</div> Back
         </div>
