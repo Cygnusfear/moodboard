@@ -43,6 +43,7 @@ class App extends Component {
 
   dropboxUpdate = update => {
     this.setState({
+      appState: 'ready',
       folders: this.state.dropbox.folders,
       images: this.state.dropbox.files,
     });
@@ -118,7 +119,7 @@ class App extends Component {
 
     //Check if we are in Dropbox mode and new folder
     const waitForName =
-      this.state.dropbox.isAuthenticated() && this.state.dropbox.path === '';
+      this.state.dropbox.isAuthenticated() && this.state.dropbox.isRoot();
 
     if (!waitForName) {
       this.saveQueue(files);
@@ -165,7 +166,7 @@ class App extends Component {
 
   selectFolder = folder => {
     this.setState({
-      appState: 'ready',
+      appState: 'loading',
     });
     this.state.dropbox.selectFolder(folder);
   };
@@ -213,14 +214,14 @@ class App extends Component {
       this.setState({ gutter: 0 });
     }
     if (e.code === 'Escape') {
-      window.location.reload();
+      this.state.dropbox.selectFolder({path_lower:'/moodboard'});
     }
   };
 
   render() {
-    const { gutter, dragging, images, dropbox, waitingForName } = this.state;
+    const { gutter, dragging, images, dropbox, waitingForName, appState } = this.state;
     return (
-      <div className={'App ' + (waitingForName ? 'enterName' : '')}>
+      <div className={'App ' + (waitingForName ? 'enterName' : '') + ' ' + (appState === "loading" ? "loading" : '') }>
         <div
           className="Gallery"
           ref={this.dropArea}
@@ -247,7 +248,7 @@ class App extends Component {
                   </div>
                 );
               })}
-              {dropbox.isAuthenticated() && dropbox.client_id && (
+              {dropbox.isAuthenticated() && dropbox.client_id && this.state.dropbox.isRoot() && (
                 <div className="folderName">
                   <form onSubmit={e => this.createFolder(e)} action="">
                     <input

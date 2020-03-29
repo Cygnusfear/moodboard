@@ -163,3 +163,7 @@ img {
   color: #efefef;
   transition: all 4s;
 }
+
+.loading .Title {
+  color: "#ccc";
+}
