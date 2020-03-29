@@ -69,6 +69,16 @@ class App extends Component {
     setTimeout(() => {
       this.setState({ showSubtitle: true });
     }, 5000);
+    window.history.pushState({name: "browserBack"}, "on browser back click", window.location.href);
+    window.history.pushState({name: "browserBack"}, "on browser back click", window.location.href);
+    window.addEventListener('popstate', (event) => {
+      if (event.state) {
+        this.state.dropbox.selectFolder({path_lower:'/moodboard'});
+        //do your code here
+        event.stopPropagation();
+        event.preventDefault();
+      }
+     }, false);
   }
 
   fileDrag = e => {
@@ -168,6 +178,7 @@ class App extends Component {
     this.setState({
       appState: 'loading',
     });
+    window.history.pushState({name: "browserBack"}, "on browser back click", window.location.href);
     this.state.dropbox.selectFolder(folder);
   };
 
