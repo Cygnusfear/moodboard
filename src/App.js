@@ -37,6 +37,7 @@ class App extends Component {
       waitingForName: false,
       appState: 'init',
       showSubtitle: false,
+      lastvisit: null
     };
     this.dropArea = React.createRef();
   }
@@ -50,6 +51,12 @@ class App extends Component {
   };
 
   componentDidMount() {
+    let lastvisit = window.localStorage.getItem('lastvisit');
+    if (lastvisit)
+    {
+      this.setState({lastvisit: lastvisit});
+    }
+    window.localStorage.setItem('lastvisit', Date.now());
     if (imported.length > 0) {
       this.setState({ images: imported });
     }
@@ -101,8 +108,9 @@ class App extends Component {
   };
 
   leaveDrag = e => {
-    e.preventDefault();
-    e.stopPropagation();
+    this.setState({dragging: false});
+    // e.preventDefault();
+    // e.stopPropagation();
   };
 
   fileDrop = async e => {
@@ -230,6 +238,10 @@ class App extends Component {
     if (this.state.selected === e) this.setState({ selected: null });
   };
 
+  unWreckZoom = () => {
+    this.setState({dragging: false});
+  }
+
   keyPress = e => {
     if (this.state.selected && e.code === 'Backspace') {
       this.fileDelete(this.state.selected);
@@ -253,7 +265,8 @@ class App extends Component {
       dropbox,
       waitingForName,
       appState,
-      showSubtitle
+      showSubtitle,
+      folders
     } = this.state;
     return (
       <div
@@ -334,6 +347,7 @@ class App extends Component {
                       className: 'img',
                       title: '',
                     }}
+                    onUnzoom={()=> this.unWreckZoom()}
                     zoomImage={{ className: 'zoomed', src: src }}
                   />
                 </div>
@@ -341,7 +355,7 @@ class App extends Component {
             })}
           </StackGrid>
         </div>
-        <div className={'subtitle' +(!showSubtitle || images.length < 1 ? '' : ' hide')}>
+        <div className={'subtitle' +(!showSubtitle || (images.length < 1 && folders.length < 1 ? '' : ' hide'))}>
           <b>Drag images into the page to add or create a new board</b>
           <br /> <div className="key">Backspace</div> Delete item under cursor{' '}
           <div className="key">Esc</div> Back

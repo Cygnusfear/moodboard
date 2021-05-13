@@ -15,7 +15,7 @@ class DropboxWrapper {
     this.dbx = {};
     this.updateFN = callback;
     this.path = '';
-    this.rootFolder = "/moodboard";
+    this.rootFolder = '/moodboard';
     this.init();
   }
 
@@ -84,9 +84,11 @@ class DropboxWrapper {
   async createFolder(folder) {
     this.folders = [];
     this.path = {
-      path_lower: this.rootFolder + "/" + folder.toLowerCase()
-    }
-    return this.dbx.filesCreateFolder({ path: this.rootFolder + (folder !== "" ? "/" + folder.toLowerCase() : '') });
+      path_lower: this.rootFolder + '/' + folder.toLowerCase(),
+    };
+    return this.dbx.filesCreateFolder({
+      path: this.rootFolder + (folder !== '' ? '/' + folder.toLowerCase() : ''),
+    });
   }
 
   selectFolder(folder) {
@@ -95,29 +97,36 @@ class DropboxWrapper {
     console.log(this.path);
     console.log(folder.path_lower);
     this.path = {
-      path_lower: folder.path_lower};
+      path_lower: folder.path_lower,
+    };
     this.updateFN();
-    console.log(this.isRoot())
+    console.log(this.isRoot());
     this.dbx
       .filesListFolder({ path: this.path.path_lower })
       .then(response => {
+        console.log(response);
         const folders = response.entries.filter(e => e['.tag'] === 'folder');
         const files = response.entries.filter(e => e['.tag'] === 'file');
         if (folders.length > 0) {
-          this.folders = folders.sort((x,y) => x.name.toLowerCase() > y.name.toLowerCase() ? 1 : -1);
+          this.folders = folders.sort((x, y) =>
+            x.name.toLowerCase() > y.name.toLowerCase() ? 1 : -1,
+          );
           console.log(this.folders);
+          this.folders.forEach(f => {
+            this.dbx
+              .filesGetMetadata({ path: f.path_lower })
+              .then(m => console.log(m));
+          });
           this.updateFN();
-        }
-        else if (files.length > 0 && !this.isRoot())
-        {
+        } else if (files.length > 0 && !this.isRoot()) {
           files.forEach(e => {
             this.dbx.filesGetTemporaryLink({ path: e.path_lower }).then(res => {
-              console.log(e.path_lower, this.path.path_lower);
-              if (e.path_lower.includes(this.path.path_lower))
-              if (!this.files.map(e => e.link === res.link).includes(true)) {
-                this.files.push(res);
-                this.updateFN();
-              }
+              let path = res.metadata.path_lower;
+              if (e.path_lower.includes(path) && (path.includes('jpg') || path.includes('gif') || path.includes('jpeg') || path.includes('png') || path.includes('webp')))
+                if (!this.files.map(e => e.link === res.link).includes(true)) {
+                  this.files.push(res);
+                  this.updateFN();
+                }
             });
           });
         }
@@ -133,27 +142,23 @@ class DropboxWrapper {
       // // Create an instance of Dropbox with the access token and use it to
       // // fetch and render the files in the users root directory.
       this.dbx = new Dropbox.Dropbox({ accessToken: this.access_token });
-        this.dbx.filesListFolder({ path: this.rootFolder })
+      this.dbx
+        .filesListFolder({ path: this.rootFolder })
         .then(response => {
-          this.selectFolder({ path_lower: this.rootFolder })
+          this.selectFolder({ path_lower: this.rootFolder });
         })
         .catch(error => {
-          console.log("lol");
+          console.log('lol');
           this.createFolder('').then(res => {
             this.selectFolder({ path_lower: this.rootFolder });
           });
-
         });
-
     } else {
       // Set the login anchors href using dbx.getAuthenticationUrl()
       this.dbx = new Dropbox.Dropbox({ clientId: this.client_id });
       this.authUrl = this.dbx.getAuthenticationUrl(
         window.location.origin + '/oauthredirect',
       );
-
-
-
 
       // document.getElementById('authlink').href = authUrl;
     }
