@@ -45,6 +45,7 @@ class App extends Component {
     this.setState({
       folders: this.state.dropbox.folders,
       images: this.state.dropbox.files,
+      appState: 'loading',
     });
   };
 
