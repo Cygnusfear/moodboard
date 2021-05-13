@@ -4,6 +4,8 @@ input {
     Roboto, Ubuntu, 'Helvetica Neue', Oxygen, Cantarell, sans-serif;
   text-align: center;
   color: #99999f;
+  padding: 30px;
+  box-sizing: border-box;
 }
 
 .Title {

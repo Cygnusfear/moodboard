@@ -27,6 +27,7 @@ class App extends Component {
     super(props);
     const dropbox = new Dropbox(this.dropboxUpdate);
     this.input = React.createRef();
+    this.grid = React.createRef();
     this.state = {
       gutter: 30,
       images: images,
@@ -46,14 +47,16 @@ class App extends Component {
       folders: this.state.dropbox.folders,
       images: this.state.dropbox.files,
       appState: 'loading',
+      gutter: this.state.gutter
     });
   };
 
   componentDidMount() {
+    this.setState({gutter:this.state.gutter})
     let lastvisit = window.localStorage.getItem('lastvisit');
     if (lastvisit)
     {
-      this.setState({lastvisit: lastvisit});
+      this.setState({lastvisit: lastvisit, folders: [], images: []});
     }
     window.localStorage.setItem('lastvisit', Date.now());
     if (imported.length > 0) {
@@ -191,6 +194,7 @@ class App extends Component {
   }
 
   selectFolder = folder => {
+    this.setState({gutter:this.state.gutter})
     this.setState({
       appState: 'loading',
     });
@@ -265,7 +269,7 @@ class App extends Component {
     } = this.state;
 
     let show = true;
-    console.log(appState)
+    console.warn(appState)
     if (appState === 'loading') show = false;
     return (
       <div
@@ -319,7 +323,8 @@ class App extends Component {
           )}
 
           <StackGrid
-            gridRef={grid => (this.grid = grid)}
+            gridRef={this.grid}
+            ref={this.grid}
             columnWidth={'30%'}
             gutterWidth={gutter}
             gutterHeight={gutter - 5}

@@ -6,22 +6,20 @@ body,
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Helvetica Neue', Arial, sans-serif !important;
   width: 100%;
-  height: 100%;
   color: #444;
   background-color: #fefeffc;
 }
 
 body {
-  padding: 30px;
+  /* padding: 30px; */
   box-sizing: border-box;
+  overflow: auto;
 }
 
 .App,
 .Gallery {
   min-width: 100%;
-  min-height: 100%;
   width: 100%;
-  height: 100%;
   user-select: none;
   position: relative;
 }
