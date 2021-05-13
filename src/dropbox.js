@@ -94,7 +94,6 @@ class DropboxWrapper {
   selectFolder(folder) {
     this.folders = [];
     this.files = [];
-    console.log(this.path);
     console.log(folder.path_lower);
     this.path = {
       path_lower: folder.path_lower,
@@ -111,12 +110,12 @@ class DropboxWrapper {
           this.folders = folders.sort((x, y) =>
             x.name.toLowerCase() > y.name.toLowerCase() ? 1 : -1,
           );
-          console.log(this.folders);
-          this.folders.forEach(f => {
-            this.dbx
-              .filesGetMetadata({ path: f.path_lower })
-              .then(m => console.log(m));
-          });
+          // console.log(this.folders);
+          // this.folders.forEach(f => {
+          //   this.dbx
+          //     .filesGetMetadata({ path: f.path_lower })
+          //     .then(m => console.log(m));
+          // });
           this.updateFN();
         } else if (files.length > 0 && !this.isRoot()) {
           files.forEach(e => {

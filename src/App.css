@@ -32,13 +32,13 @@ input {
 
 .subtitle.hide {
   opacity: 0;
-  transition: opacity 0.5s;
   pointer-events: none;
+  transition: all 0.1s;
 }
 
 .subtitle {
   opacity: 1;
-  transition: opacity 0.5s;
+  transition: all 0.1s;
 }
 
 .header {

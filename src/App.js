@@ -36,7 +36,6 @@ class App extends Component {
       folders: [],
       waitingForName: false,
       appState: 'init',
-      showSubtitle: false,
       lastvisit: null
     };
     this.dropArea = React.createRef();
@@ -44,7 +43,6 @@ class App extends Component {
 
   dropboxUpdate = update => {
     this.setState({
-      appState: 'ready',
       folders: this.state.dropbox.folders,
       images: this.state.dropbox.files,
     });
@@ -73,9 +71,6 @@ class App extends Component {
       console.log('Authenticated');
       this.setState({ folders: this.state.dropbox.folders });
     }
-    setTimeout(() => {
-      this.setState({ showSubtitle: true });
-    }, 1000);
     window.history.pushState(
       { name: 'browserBack' },
       'on browser back click',
@@ -160,9 +155,9 @@ class App extends Component {
     }
     this.setState({
       images: [...this.state.images, ...images],
-      appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : '',
       waitingForName: waitForName,
     });
+    setTimeout(() => {this.setState({appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : ''})}, 4000)
   };
 
   uploadFromURL(file) {
@@ -190,8 +185,8 @@ class App extends Component {
     this.setState({
       dragging: false,
       images: [...this.state.images, ...images],
-      appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : '',
     });
+    setTimeout(() => {this.setState({appState: !!this.state.dropbox.isAuthenticated() ? 'ready' : ''})}, 4000)
   }
 
   selectFolder = folder => {
@@ -265,9 +260,12 @@ class App extends Component {
       dropbox,
       waitingForName,
       appState,
-      showSubtitle,
       folders
     } = this.state;
+
+    let show = true;
+    console.log(appState)
+    if (appState === 'loading') show = false;
     return (
       <div
         className={
@@ -355,7 +353,7 @@ class App extends Component {
             })}
           </StackGrid>
         </div>
-        <div className={'subtitle' +(!showSubtitle || (images.length < 1 && folders.length < 1 ? '' : ' hide'))}>
+        <div className={'subtitle' +((!show || (images.length > 0 | folders.length > 0)) ? ' hide' : '')}>
           <b>Drag images into the page to add or create a new board</b>
           <br /> <div className="key">Backspace</div> Delete item under cursor{' '}
           <div className="key">Esc</div> Back
